@@ -1,10 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const sdk_1 = require("@directus/sdk");
-const zod_1 = require("zod");
+import { Directus } from "@directus/sdk";
+import { z } from "zod";
 describe(`Directus SDK`, () => {
     test(`Connect and fetch`, async () => {
-        const client = new sdk_1.Directus(`http://localhost:17055`);
+        const client = new Directus(`http://localhost:17055`);
         await client.auth.login({
             email: `admin@example.com`,
             password: `admin-password`,
@@ -56,7 +54,7 @@ describe(`Directus SDK`, () => {
             article_id: `article1`,
             author_email: `john.doe@example.com`,
         });
-        const articleAuthorId = zod_1.z.string().parse(articleAuthor === null || articleAuthor === void 0 ? void 0 : articleAuthor.article_author_id);
+        const articleAuthorId = z.string().parse(articleAuthor?.article_author_id);
         expect(await client
             .items(`article_author`)
             .readOne(articleAuthorId, { fields: [`article_id`, `author_email`] })).toEqual({
