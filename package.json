@@ -7,6 +7,7 @@
     "directus-typescript-gen": "./build/cli.js"
   },
   "scripts": {
+    "prepare": "npm run build",
     "build": "rm -rf build && tsc -p . && chmod u+x ./build/cli.js",
     "test:build": "jest build",
     "test:src": "jest src",
