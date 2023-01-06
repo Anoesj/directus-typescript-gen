@@ -1,7 +1,6 @@
 #!/usr/bin/env node
-import { promises } from "fs";
-import { resolve } from "path";
-import fetch from "node-fetch";
+import { writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
 import { z } from "zod";
 import yargs from "yargs";
 import openApiTs from "openapi-typescript";
@@ -66,8 +65,12 @@ const spec = (await (await fetch(`${host}/server/specs/oas`, {
         Authorization: `Bearer ${token}`,
     },
 })).json());
+if ('errors' in spec && spec.errors.length) {
+    console.error(spec.errors);
+    process.exit(1);
+}
 if (specOutFile) {
-    await promises.writeFile(resolve(process.cwd(), specOutFile), JSON.stringify(spec, null, 2), {
+    await writeFile(resolve(process.cwd(), specOutFile), JSON.stringify(spec, null, 2), {
         encoding: `utf-8`,
     });
 }
@@ -91,7 +94,7 @@ const source = [
     exportDirectusCollectionsType,
     exportAllCollectionsType,
 ].join(`\n`);
-await promises.writeFile(resolve(process.cwd(), outFile), source, {
+await writeFile(resolve(process.cwd(), outFile), source, {
     encoding: `utf-8`,
 });
 //# sourceMappingURL=cli.js.map
