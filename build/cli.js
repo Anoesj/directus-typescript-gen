@@ -65,10 +65,13 @@ const spec = (await (await fetch(`${host}/server/specs/oas`, {
         Authorization: `Bearer ${token}`,
     },
 })).json());
-if ('errors' in spec && spec.errors.length) {
-    console.error(spec.errors);
-    process.exit(1);
+function assertSpecHasNoErrors(spec) {
+    if ('errors' in spec && spec.errors.length) {
+        console.error(spec.errors);
+        throw new Error('Could not generate TypeScript definitions');
+    }
 }
+assertSpecHasNoErrors(spec);
 if (specOutFile) {
     await writeFile(resolve(process.cwd(), specOutFile), JSON.stringify(spec, null, 2), {
         encoding: `utf-8`,
