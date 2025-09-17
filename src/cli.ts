@@ -135,6 +135,11 @@ const exportDirectusCollectionsProperties: string[] = [];
 
 for (const [schemaKey, schema] of Object.entries(spec.components.schemas)) {
   const collectionId = schema[`x-collection`];
+
+  if (typeof collectionId !== 'string' || !collectionId) {
+    continue;
+  }
+
   const line = `  ${collectionId}: components["schemas"]["${schemaKey}"];`;
   const isUserCollection = schemaKey.startsWith(`Items`);
 
